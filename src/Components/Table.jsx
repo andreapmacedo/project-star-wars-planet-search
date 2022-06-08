@@ -15,7 +15,7 @@ function Table() {
         <td>{planet.diameter}</td>
         <td>{planet.climate}</td>
         <td>{planet.gravity}</td>
-        <td>{planet.Terrain}</td>
+        <td>{planet.terrain}</td>
         <td>{planet.surface_water}</td>
         <td>{planet.population}</td>
         <td>{planet.films}</td>
