@@ -3,11 +3,10 @@ import PlanetsContext from '../context/PlanetsContext';
 import './Table.css';
 
 function Table() {
-  const { planetsList } = useContext(PlanetsContext);
-  // const [planets, setPlanets] = useState([]);
+  const { filteredPlanetsList } = useContext(PlanetsContext);
 
   function geRows() {
-    return planetsList.map((planet, i) => (
+    return filteredPlanetsList.map((planet, i) => (
       <tr key={ i } className={ i % 2 === 0 ? 'Even' : 'Odd' }>
         <td>{planet.name}</td>
         <td>{planet.rotation_period}</td>
@@ -22,11 +21,6 @@ function Table() {
         <td>{planet.created}</td>
         <td>{planet.edited}</td>
         <td>{planet.url}</td>
-        {/* <td>{Number(planet.value).toFixed(2)}</td>
-        <td>{planet.exchangeRates[planet.currency].name}</td>
-        <td>{ask(planet).toFixed(2)}</td>
-        <td>{(ask(planet) * Number(planet.value)).toFixed(2)}</td>
-        <td>Real</td> */}
       </tr>
     ));
   }
@@ -55,7 +49,6 @@ function Table() {
           {geRows()}
         </tbody>
       </table>
-
     </div>
   );
 }
