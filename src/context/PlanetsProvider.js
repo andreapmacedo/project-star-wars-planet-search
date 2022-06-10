@@ -20,20 +20,65 @@ function PlanetsProvider({ children }) {
     getPlanets();
   }, []);
 
-  function filterPlanets(searched) {
+  function filterPlanetsByName(searched) {
     const filtered = planetsList.filter((planet) => planet.name.includes(searched));
-    // console.log(filtered);
     setFilteredPlanetsList(filtered);
+    setPlanetSearched(searched);
   }
 
-  function serarchPlanet(searched) {
-    setPlanetSearched(searched);
-    filterPlanets(searched);
+  function GenericFindBy(column, planetState) {
+    if (column === 'unknown') return '';
+    if (planetState.comparison === 'maior que') {
+      return planetsList
+        .find(() => Number(column) > Number(planetState.value));
+    } if (planetState.comparison === 'menor que') {
+      return planetsList
+        .find(() => Number(column) < Number(planetState.value));
+    } if (planetState.comparison === 'igual a') {
+      return planetsList
+        .find(() => Number(column) === Number(planetState.value));
+    }
+  }
+
+  function clearFilter() {
+    setFilteredPlanetsList(planetsList);
+  }
+
+  function findBy(planetState) {
+    switch (planetState.column) {
+    case 'population':
+      return planetsList
+        .filter((planet) => GenericFindBy(planet.population, planetState));
+    case 'orbital_period':
+      return planetsList
+        .filter((planet) => GenericFindBy(planet.orbital_period, planetState));
+    case 'diameter':
+      return planetsList
+        .filter((planet) => GenericFindBy(planet.diameter, planetState));
+    case 'rotation_period':
+      return planetsList
+        .filter((planet) => GenericFindBy(planet.rotation_period, planetState));
+    case 'surface_water':
+      return planetsList
+        .filter((planet) => GenericFindBy(planet.surface_water, planetState));
+    default:
+      break;
+    }
+  }
+
+  function filterPlanetsByNumber(planetState) {
+    const byOrder = findBy(planetState);
+    console.log(byOrder);
+    setFilteredPlanetsList(byOrder);
   }
 
   return (
     <PlanetsContext.Provider
-      value={ { filteredPlanetsList, serarchPlanet, planetsSearched } }
+      value={ { filteredPlanetsList,
+        filterPlanetsByName,
+        filterPlanetsByNumber,
+        clearFilter,
+        planetsSearched } }
     >
       {children}
     </PlanetsContext.Provider>
