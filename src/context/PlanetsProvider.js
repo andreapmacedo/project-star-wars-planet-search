@@ -82,7 +82,7 @@ function PlanetsProvider({ children }) {
     const byOrder = findBy(planetState);
     setFilteredPlanetsList(byOrder);
     setStateList([...stateList, planetState]);
-    //TODO: caso a lista do estate esteja vazia, a pesquisa é feita com planetList, do contrari, vai usar a lista já filtrada.
+    // TODO: caso a lista do estate esteja vazia, a pesquisa é feita com planetList, do contrari, vai usar a lista já filtrada.
     // Verifica se a forma como está pensada a implementaçao acima contempla a filtragem da tabela apos a remocao de um item da lista apenas.
   }
 
