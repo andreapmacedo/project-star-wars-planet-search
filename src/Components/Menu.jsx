@@ -1,11 +1,15 @@
 import React, { useContext, useState } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
+import './Menu.css';
 
 function Menu() {
   const { filterPlanetsByName,
     planetsSearched,
     filterPlanetsByNumber,
     clearFilter,
+    stateList,
+    deleteFilter,
+    deleteAllFilters,
   } = useContext(PlanetsContext);
 
   const [state, setState] = useState({ column: 'population',
@@ -18,6 +22,14 @@ function Menu() {
 
   function callClearFilter() {
     clearFilter();
+  }
+
+  function callDeleteFilter(index) {
+    deleteFilter(index);
+  }
+
+  function callDeleteAllFilters() {
+    deleteAllFilters();
   }
 
   const handleChange = ({ target }) => {
@@ -34,34 +46,22 @@ function Menu() {
 
   return (
     <section className="menu">
-      <button
-        onClick={ callFilter }
-        type="button"
-        data-testid="button-filter"
-      >
-        Filtrar
-      </button>
-      <button
-        onClick={ callClearFilter }
-        type="button"
-        data-testid="button-clear"
-      >
-        Limpar
-      </button>
-      <select
-        data-testid="column-Sort"
-        onChange={ handleChange }
-        name="columnSort"
-        value={ state.comparison }
-      >
-        <option value="population">population</option>
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
-      </select>
-      <div>
-        teste menu
+      <label htmlFor="orderBy">
+        Ordenar por:
+        <select
+          data-testid="column-Sort"
+          onChange={ handleChange }
+          name="columnSort"
+          value={ state.comparison }
+        >
+          <option value="population">population</option>
+          <option value="orbital_period">orbital_period</option>
+          <option value="diameter">diameter</option>
+          <option value="rotation_period">rotation_period</option>
+          <option value="surface_water">surface_water</option>
+        </select>
+      </label>
+      <div className="menu-a">
         <label htmlFor="serch">
           Pesquisar Planeta:
           <input
@@ -73,28 +73,33 @@ function Menu() {
             id="serch"
           />
         </label>
-        <select
-          data-testid="column-filter"
-          onChange={ handleChange }
-          name="columnFilter"
-          value={ state.column }
-        >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
-        </select>
-        <select
-          data-testid="comparison-filter"
-          onChange={ handleChange }
-          name="comparison"
-          value={ state.comparison }
-        >
-          <option value="maior que">maior que</option>
-          <option value="menor que">menor que</option>
-          <option value="igual a">igual a</option>
-        </select>
+        <label htmlFor="filterBy">
+          Filtrar por:
+          <select
+            data-testid="column-filter"
+            onChange={ handleChange }
+            name="columnFilter"
+            value={ state.column }
+          >
+            <option value="population">population</option>
+            <option value="orbital_period">orbital_period</option>
+            <option value="diameter">diameter</option>
+            <option value="rotation_period">rotation_period</option>
+            <option value="surface_water">surface_water</option>
+          </select>
+        </label>
+        <label htmlFor="comparisonBy">
+          <select
+            data-testid="comparison-filter"
+            onChange={ handleChange }
+            name="comparison"
+            value={ state.comparison }
+          >
+            <option value="maior que">maior que</option>
+            <option value="menor que">menor que</option>
+            <option value="igual a">igual a</option>
+          </select>
+        </label>
         <input
           data-testid="value-filter"
           placeholder="value"
@@ -103,6 +108,47 @@ function Menu() {
           onChange={ handleChange }
           value={ state.value }
         />
+        <button
+          onClick={ callFilter }
+          type="button"
+          data-testid="button-filter"
+        >
+          Filtrar
+        </button>
+        <button
+          onClick={ callClearFilter }
+          type="button"
+          data-testid="button-clear"
+        >
+          Limpar
+        </button>
+      </div>
+      <div className="state-list-container">
+        {stateList.map((stateItem, index) => (
+          <section
+            data-testid="filter"
+            key={ index }
+            className="state-list"
+          >
+            <p>{`${stateItem.column} ${stateItem.comparison} ${stateItem.value}`}</p>
+            <button
+              type="button"
+              onClick={ () => callDeleteFilter(index) }
+            >
+              deletar
+            </button>
+          </section>
+
+        ))}
+        <button
+          data-testid="button-remove-filters"
+          type="button"
+          onClick={ callDeleteAllFilters }
+        >
+          Remover Todos
+        </button>
+        {/* {stateList &&
+      stateList.map((stateItem, index) => (<p key={ index }>{stateItem}</p>))} */}
       </div>
     </section>
   );

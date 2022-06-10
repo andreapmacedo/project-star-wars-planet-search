@@ -1,0 +1,55 @@
+.menu {
+  align-items: center;
+  background-color: #383838;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  margin: 5px;
+  padding: 5px;
+  width: 100%;
+}
+
+.menu label {
+  background-color: #383838;
+  color: red;
+  margin: 5px;
+  padding: 5px;
+}
+
+.menu input {
+  margin: 5px;
+  padding: 5px;
+  width: 150px;
+}
+
+.menu button {
+  margin: 5px;
+  padding: 5px;
+}
+
+.menu select {
+  margin: 5px;
+  padding: 5px;
+}
+
+.state-list-container {
+  align-items: center;
+  background-color: rgb(75, 72, 72);
+  border: 1px solid #383838;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3px;
+}
+
+.state-list {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.state-list p {
+  color: red;
+  margin-left: 5px;
+}

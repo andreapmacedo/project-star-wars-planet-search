@@ -8,6 +8,8 @@ function PlanetsProvider({ children }) {
   const [filteredPlanetsList, setFilteredPlanetsList] = useState([]);
   const [planetsSearched, setPlanetSearched] = useState('');
 
+  const [stateList, setStateList] = useState([]);
+
   useEffect(() => {
     const getPlanets = async () => {
       const data = await fetch(endpoint);
@@ -44,6 +46,16 @@ function PlanetsProvider({ children }) {
     setFilteredPlanetsList(planetsList);
   }
 
+  function deleteFilter(itemIndex) {
+    setStateList(stateList.filter((item, index) => index !== itemIndex));
+    // setFilteredPlanetsList(planetsList);
+  }
+  function deleteAllFilters() {
+    // setStateList(stateList.filter((item, index) => index !== itemIndex));
+    setStateList([]);
+    // setFilteredPlanetsList(planetsList);
+  }
+
   function findBy(planetState) {
     switch (planetState.column) {
     case 'population':
@@ -68,8 +80,10 @@ function PlanetsProvider({ children }) {
 
   function filterPlanetsByNumber(planetState) {
     const byOrder = findBy(planetState);
-    console.log(byOrder);
     setFilteredPlanetsList(byOrder);
+    setStateList([...stateList, planetState]);
+    //TODO: caso a lista do estate esteja vazia, a pesquisa é feita com planetList, do contrari, vai usar a lista já filtrada.
+    // Verifica se a forma como está pensada a implementaçao acima contempla a filtragem da tabela apos a remocao de um item da lista apenas.
   }
 
   return (
@@ -77,7 +91,10 @@ function PlanetsProvider({ children }) {
       value={ { filteredPlanetsList,
         filterPlanetsByName,
         filterPlanetsByNumber,
+        stateList,
         clearFilter,
+        deleteFilter,
+        deleteAllFilters,
         planetsSearched } }
     >
       {children}
