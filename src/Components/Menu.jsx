@@ -14,22 +14,32 @@ function Menu() {
 
   const [state, setState] = useState({ column: 'population',
     comparison: 'maior que',
-    value: 0 });
+    value: 0,
+    columnFilteredList: [],
+    columnFilterList: ['population',
+      'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
+    columnDefaultList: ['population',
+      'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
+    columnDefault: 'population',
+  });
 
-  function callFilter() {
+  function onClickHandler() {
+    // console.log(state.column);
+    if (state.columnFilterList.length === 0) return 0;
+    const filtered = state.columnFilterList
+      .filter((columnItem) => columnItem !== state.column);
+    console.log(filtered);
+    setState({ ...state, columnFilterList: filtered, column: filtered[0] });
     filterPlanetsByNumber(state);
   }
 
-  function callClearFilter() {
-    clearFilter();
-  }
-
-  function callDeleteFilter(index) {
-    deleteFilter(index);
-  }
-
-  function callDeleteAllFilters() {
+  function callDeleteAllFIlters() {
+    setState({ ...state, columnFilterList: state.columnDefaultList });
     deleteAllFilters();
+  }
+
+  function callClear() {
+    clearFilter();
   }
 
   const handleChange = ({ target }) => {
@@ -41,6 +51,8 @@ function Menu() {
       setState({ ...state, comparison: target.value });
     } else if (target.name === 'value') {
       setState({ ...state, value: target.value });
+    } else if (target.name === 'columnSort') {
+      setState({ ...state, columnDefault: target.value });
     }
   };
 
@@ -52,13 +64,11 @@ function Menu() {
           data-testid="column-Sort"
           onChange={ handleChange }
           name="columnSort"
-          value={ state.comparison }
+          value={ state.columnDefault }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          {state.columnDefaultList.map((column, index) => (
+            <option key={ index } value={ column }>{column}</option>
+          ))}
         </select>
       </label>
       <div className="menu-a">
@@ -73,6 +83,13 @@ function Menu() {
             id="serch"
           />
         </label>
+        <button
+          onClick={ callClear }
+          type="button"
+          data-testid="button-clear"
+        >
+          Limpar
+        </button>
         <label htmlFor="filterBy">
           Filtrar por:
           <select
@@ -81,11 +98,14 @@ function Menu() {
             name="columnFilter"
             value={ state.column }
           >
-            <option value="population">population</option>
+            {state.columnFilterList.map((column, index) => (
+              <option key={ index } value={ column }>{column}</option>
+            ))}
+            {/* <option value="population">population</option>
             <option value="orbital_period">orbital_period</option>
             <option value="diameter">diameter</option>
             <option value="rotation_period">rotation_period</option>
-            <option value="surface_water">surface_water</option>
+            <option value="surface_water">surface_water</option> */}
           </select>
         </label>
         <label htmlFor="comparisonBy">
@@ -109,18 +129,11 @@ function Menu() {
           value={ state.value }
         />
         <button
-          onClick={ callFilter }
+          onClick={ onClickHandler }
           type="button"
           data-testid="button-filter"
         >
           Filtrar
-        </button>
-        <button
-          onClick={ callClearFilter }
-          type="button"
-          data-testid="button-clear"
-        >
-          Limpar
         </button>
       </div>
       <div className="state-list-container">
@@ -133,7 +146,7 @@ function Menu() {
             <p>{`${stateItem.column} ${stateItem.comparison} ${stateItem.value}`}</p>
             <button
               type="button"
-              onClick={ () => callDeleteFilter(index) }
+              onClick={ () => deleteFilter(index) }
             >
               deletar
             </button>
@@ -143,7 +156,8 @@ function Menu() {
         <button
           data-testid="button-remove-filters"
           type="button"
-          onClick={ callDeleteAllFilters }
+          // onClick={ callDeleteAllFilters }
+          onClick={ callDeleteAllFIlters }
         >
           Remover Todos
         </button>

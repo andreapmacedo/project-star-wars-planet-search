@@ -44,6 +44,7 @@ function PlanetsProvider({ children }) {
 
   function clearFilter() {
     setFilteredPlanetsList(planetsList);
+    setPlanetSearched('');
   }
 
   function deleteFilter(itemIndex) {
