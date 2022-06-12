@@ -29,6 +29,7 @@
 
 .menu select {
   margin: 5px;
+  min-width: 150px;
   padding: 5px;
 }
 

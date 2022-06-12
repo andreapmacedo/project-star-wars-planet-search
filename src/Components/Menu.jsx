@@ -3,38 +3,54 @@ import PlanetsContext from '../context/PlanetsContext';
 import './Menu.css';
 
 function Menu() {
+  const defaultColumnList = ['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
+
   const { filterPlanetsByName,
     planetsSearched,
-    filterPlanetsByNumber,
     clearFilter,
     stateList,
     deleteFilter,
     deleteAllFilters,
+    filterList,
+    createFilter,
   } = useContext(PlanetsContext);
 
   const [state, setState] = useState({ column: 'population',
     comparison: 'maior que',
     value: 0,
     columnFilteredList: [],
-    columnFilterList: ['population',
-      'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
-    columnDefaultList: ['population',
-      'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
-    columnDefault: 'population',
+    columnFilterList: defaultColumnList,
   });
 
-  function onClickHandler() {
-    // console.log(state.column);
+  function handleSubmit(e) {
+    e.preventDefault();
+    const newFilter = {
+      id: filterList.length + 1,
+      column: state.column,
+      comparison: state.comparison,
+      value: state.value,
+      // column: state.column,
+      // comparison: state.comparison,
+      // value: state.value,
+    };
+    createFilter(newFilter);
+    // console.log(filterList);
+
     if (state.columnFilterList.length === 0) return 0;
-    const filtered = state.columnFilterList
+    const filteredList = state.columnFilterList
       .filter((columnItem) => columnItem !== state.column);
-    console.log(filtered);
-    setState({ ...state, columnFilterList: filtered, column: filtered[0] });
-    filterPlanetsByNumber(state);
+    setState((prevState) => ({ ...prevState,
+      columnFilterList: filteredList,
+      column: filteredList[0],
+      columnFilteredList: prevState.columnFilteredList.concat(state.column),
+    }));
+    // const columns = state.columnFilteredList.concat(state.column);
+    // OnClickHandler(state, columns);
   }
 
-  function callDeleteAllFIlters() {
-    setState({ ...state, columnFilterList: state.columnDefaultList });
+  function callDeleteAllFilters() {
+    setState({ ...state, columnFilterList: defaultColumnList });
     deleteAllFilters();
   }
 
@@ -66,7 +82,7 @@ function Menu() {
           name="columnSort"
           value={ state.columnDefault }
         >
-          {state.columnDefaultList.map((column, index) => (
+          {defaultColumnList.map((column, index) => (
             <option key={ index } value={ column }>{column}</option>
           ))}
         </select>
@@ -90,51 +106,49 @@ function Menu() {
         >
           Limpar
         </button>
-        <label htmlFor="filterBy">
-          Filtrar por:
-          <select
-            data-testid="column-filter"
+        <form onSubmit={ handleSubmit }>
+          <label htmlFor="filterBy">
+            Filtrar por:
+            <select
+              data-testid="column-filter"
+              onChange={ handleChange }
+              name="columnFilter"
+              value={ state.column }
+              // value={ state.columnFilterList[0] }
+            >
+              {state.columnFilterList.map((column, index) => (
+                <option key={ index } value={ column }>{column}</option>
+              ))}
+            </select>
+          </label>
+          <label htmlFor="comparisonBy">
+            <select
+              data-testid="comparison-filter"
+              onChange={ handleChange }
+              name="comparison"
+              value={ state.comparison }
+            >
+              <option value="maior que">maior que</option>
+              <option value="menor que">menor que</option>
+              <option value="igual a">igual a</option>
+            </select>
+          </label>
+          <input
+            data-testid="value-filter"
+            placeholder="value"
+            type="number"
+            name="value"
             onChange={ handleChange }
-            name="columnFilter"
-            value={ state.column }
+            value={ state.value }
+          />
+          <button
+            // onClick={ callOnClickHandler }
+            type="submit"
+            data-testid="button-filter"
           >
-            {state.columnFilterList.map((column, index) => (
-              <option key={ index } value={ column }>{column}</option>
-            ))}
-            {/* <option value="population">population</option>
-            <option value="orbital_period">orbital_period</option>
-            <option value="diameter">diameter</option>
-            <option value="rotation_period">rotation_period</option>
-            <option value="surface_water">surface_water</option> */}
-          </select>
-        </label>
-        <label htmlFor="comparisonBy">
-          <select
-            data-testid="comparison-filter"
-            onChange={ handleChange }
-            name="comparison"
-            value={ state.comparison }
-          >
-            <option value="maior que">maior que</option>
-            <option value="menor que">menor que</option>
-            <option value="igual a">igual a</option>
-          </select>
-        </label>
-        <input
-          data-testid="value-filter"
-          placeholder="value"
-          type="number"
-          name="value"
-          onChange={ handleChange }
-          value={ state.value }
-        />
-        <button
-          onClick={ onClickHandler }
-          type="button"
-          data-testid="button-filter"
-        >
-          Filtrar
-        </button>
+            Filtrar
+          </button>
+        </form>
       </div>
       <div className="state-list-container">
         {stateList.map((stateItem, index) => (
@@ -156,13 +170,10 @@ function Menu() {
         <button
           data-testid="button-remove-filters"
           type="button"
-          // onClick={ callDeleteAllFilters }
-          onClick={ callDeleteAllFIlters }
+          onClick={ callDeleteAllFilters }
         >
           Remover Todos
         </button>
-        {/* {stateList &&
-      stateList.map((stateItem, index) => (<p key={ index }>{stateItem}</p>))} */}
       </div>
     </section>
   );
