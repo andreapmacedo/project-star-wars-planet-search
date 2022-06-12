@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 import './Menu.css';
 
@@ -12,9 +12,11 @@ function Menu() {
     stateList,
     deleteFilter,
     deleteAllFilters,
-    filterList,
+    // filterList,
     createFilter,
   } = useContext(PlanetsContext);
+
+  const [planetName, setPlanetName] = useState('');
 
   const [state, setState] = useState({ column: 'population',
     comparison: 'maior que',
@@ -25,38 +27,57 @@ function Menu() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (state.columnFilterList.length === 0) return 0;
     const newFilter = {
-      id: filterList.length + 1,
       column: state.column,
       comparison: state.comparison,
       value: state.value,
-      // column: state.column,
-      // comparison: state.comparison,
-      // value: state.value,
     };
     createFilter(newFilter);
-    // console.log(filterList);
 
-    if (state.columnFilterList.length === 0) return 0;
-    const filteredList = state.columnFilterList
+    const filterList = state.columnFilterList
       .filter((columnItem) => columnItem !== state.column);
     setState((prevState) => ({ ...prevState,
-      columnFilterList: filteredList,
-      column: filteredList[0],
+      columnFilterList: filterList,
+      column: filterList[0],
       columnFilteredList: prevState.columnFilteredList.concat(state.column),
     }));
-    // const columns = state.columnFilteredList.concat(state.column);
-    // OnClickHandler(state, columns);
   }
 
   function callDeleteAllFilters() {
-    setState({ ...state, columnFilterList: defaultColumnList });
+    setState({ ...state,
+      columnFilterList: defaultColumnList,
+      column: 'population',
+      columnFilteredList: [],
+    });
     deleteAllFilters();
+  }
+
+  function callDeleteFilter(index) {
+    const filteredList = stateList
+      .filter((columnItem, indexList) => indexList !== index);
+
+    const filteredMap = filteredList
+      .map(({ column }) => column);
+
+    const filterList = defaultColumnList
+      .filter((columnItem) => !filteredMap.includes(columnItem));
+    // console.log(filterList);
+    setState((prevState) => ({ ...prevState,
+      columnFilterList: filterList,
+      column: filterList[0],
+      columnFilteredList: filteredList,
+    }));
+    deleteFilter(index);
   }
 
   function callClear() {
     clearFilter();
   }
+
+  useEffect(() => {
+    filterPlanetsByName(planetName);
+  }, [planetName]);
 
   const handleChange = ({ target }) => {
     if (target.name === 'serchByName') {
@@ -87,71 +108,83 @@ function Menu() {
           ))}
         </select>
       </label>
-      <div className="menu-a">
-        <label htmlFor="serch">
-          Pesquisar Planeta:
-          <input
-            data-testid="name-filter"
-            value={ planetsSearched }
+      {/* <div className="menu-a"> */}
+      <label htmlFor="serch">
+        Pesquisar Planeta:
+        <input
+          data-testid="name-filter"
+          value={ planetName }
+          onChange={ (e) => setPlanetName(e.target.value) }
+          name="planetName"
+          placeholder="Pesquisar Planeta"
+          id="serch"
+        />
+      </label>
+      {/* <label htmlFor="serch">
+        Pesquisar Planeta:
+        <input
+          data-testid="name-filter"
+          value={ planetsSearched }
+          onChange={ handleChange }
+          name="serchByName"
+          placeholder="Pesquisar Planeta"
+          id="serch"
+        />
+      </label> */}
+      <button
+        onClick={ callClear }
+        type="button"
+        data-testid="button-clear"
+      >
+        Limpar
+      </button>
+      <form onSubmit={ handleSubmit }>
+        <label htmlFor="filterBy">
+          Filtrar por:
+          <select
+            data-testid="column-filter"
             onChange={ handleChange }
-            name="serchByName"
-            placeholder="Pesquisar Planeta"
-            id="serch"
-          />
-        </label>
-        <button
-          onClick={ callClear }
-          type="button"
-          data-testid="button-clear"
-        >
-          Limpar
-        </button>
-        <form onSubmit={ handleSubmit }>
-          <label htmlFor="filterBy">
-            Filtrar por:
-            <select
-              data-testid="column-filter"
-              onChange={ handleChange }
-              name="columnFilter"
-              value={ state.column }
-              // value={ state.columnFilterList[0] }
-            >
-              {state.columnFilterList.map((column, index) => (
-                <option key={ index } value={ column }>{column}</option>
-              ))}
-            </select>
-          </label>
-          <label htmlFor="comparisonBy">
-            <select
-              data-testid="comparison-filter"
-              onChange={ handleChange }
-              name="comparison"
-              value={ state.comparison }
-            >
-              <option value="maior que">maior que</option>
-              <option value="menor que">menor que</option>
-              <option value="igual a">igual a</option>
-            </select>
-          </label>
-          <input
-            data-testid="value-filter"
-            placeholder="value"
-            type="number"
-            name="value"
-            onChange={ handleChange }
-            value={ state.value }
-          />
-          <button
-            // onClick={ callOnClickHandler }
-            type="submit"
-            data-testid="button-filter"
+            name="columnFilter"
+            value={ state.column }
+            // value={ state.columnFilterList[0] }
           >
-            Filtrar
-          </button>
-        </form>
-      </div>
+            {state.columnFilterList.map((column, index) => (
+              <option key={ index } value={ column }>{column}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="comparisonBy">
+          <select
+            data-testid="comparison-filter"
+            onChange={ handleChange }
+            name="comparison"
+            value={ state.comparison }
+          >
+            <option value="maior que">maior que</option>
+            <option value="menor que">menor que</option>
+            <option value="igual a">igual a</option>
+          </select>
+        </label>
+        <input
+          data-testid="value-filter"
+          placeholder="value"
+          type="number"
+          name="value"
+          onChange={ handleChange }
+          value={ state.value }
+        />
+        <button
+          // onClick={ callOnClickHandler }
+          type="submit"
+          data-testid="button-filter"
+        >
+          Filtrar
+        </button>
+      </form>
+      {/* </div> */}
       <div className="state-list-container">
         {stateList.map((stateItem, index) => (
+        // {filterList.map((stateItem, index) => (
           <section
             data-testid="filter"
             key={ index }
@@ -160,7 +193,7 @@ function Menu() {
             <p>{`${stateItem.column} ${stateItem.comparison} ${stateItem.value}`}</p>
             <button
               type="button"
-              onClick={ () => deleteFilter(index) }
+              onClick={ () => callDeleteFilter(index) }
             >
               deletar
             </button>
