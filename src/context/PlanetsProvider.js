@@ -12,7 +12,8 @@ function PlanetsProvider({ children }) {
   const [stateList, setStateList] = useState([]);
   const [filterList, setFilterList] = useState([]);
   const [filteredListByName, setFilteredListByName] = useState(planetsList);
-  let currentFilteredPlanetList = planetsList;
+  const [filteredListByFilter, setFilteredListByFilter] = useState(planetsList);
+  let currentFilteredbyFilter = planetsList;
 
   useEffect(() => {
     const getPlanets = async () => {
@@ -75,13 +76,57 @@ function PlanetsProvider({ children }) {
     // filterPlanetsByName(planetsSearched);
   }
 
-  function filterByListFilters() {
+  // function filterByListFilters() {
+  //   const filtered = filteredListByName
+  //     .filter((planet) => planet.name.includes(planetSearched));
+  //   setFilteredListByFilter(filtered);
+  // }
+
+  function filterByListFilters(list) {
+    console.log('list', list);
+    console.log('currentFilteredbyFilter', currentFilteredbyFilter);
     filterList.forEach((filterIten) => {
-      currentFilteredPlanetList = findByColum(filterIten, currentFilteredPlanetList);
+      currentFilteredbyFilter = findByColum(filterIten, currentFilteredbyFilter);
     });
-    // console.log('filterByListFilters', currentFilteredPlanetList);
-    setFilteredPlanetsList(currentFilteredPlanetList);
+    console.log('filterByListFilters', currentFilteredbyFilter);
+
+    const filteredByNameMap = filteredListByName.map(({ name }) => name);
+    console.log('filteredByNameMap', filteredByNameMap);
+
+    let result = currentFilteredbyFilter;
+
+    if (filteredByNameMap.length > 0) {
+      result = currentFilteredbyFilter
+        .filter(({ name }) => filteredByNameMap.includes(name));
+    }
+
+    console.log('result', result);
+    console.log('---------------');
+    // console.log(filteredListByFilter);
+    // const test = result.filter((item) => item);
+    // console.log('test', test);
+
+    // setFilteredListByFilter(temp);
+    setFilteredPlanetsList(result);
   }
+
+  // function filterByListFilters() {
+  //   filterList.forEach((filterIten) => {
+  //     currentFilteredbyFilter = findByColum(filterIten, filteredListByFilter);
+  //   });
+  //   console.log('filterByListFilters', currentFilteredbyFilter);
+  //   setFilteredListByFilter(currentFilteredbyFilter);
+  //   setFilteredPlanetsList(currentFilteredbyFilter);
+  // }
+
+
+  // function filterByListFilters() {
+  //   filterList.forEach((filterIten) => {
+  //     currentFilteredbyFilter = findByColum(filterIten, currentFilteredbyFilter);
+  //   });
+  //   // console.log('filterByListFilters', currentFilteredbyFilter);
+  //   setFilteredPlanetsList(currentFilteredbyFilter);
+  // }
 
   function createFilter(newFilter) {
     setFilterList([...filterList, newFilter]);
@@ -89,26 +134,39 @@ function PlanetsProvider({ children }) {
   }
 
   useEffect(() => {
-    filterByListFilters();
+    filterByListFilters(filteredPlanetsList);
   }, [filterList]);
 
   function clearFilter() {
-    filterByListFilters();
+    currentFilteredbyFilter = planetsList;
+    filterByListFilters(currentFilteredbyFilter);
     setPlanetSearched('');
   }
 
+  // let currentFilteredbyName = planetsList;
+  // UM FILTRO TRABALHANDO COM O FILTRO DO OUTRO
+
   function updateFilterByName() {
-    console.log('filteredPlanetsList', filteredPlanetsList);
+    // console.log('filteredPlanetsList', filteredPlanetsList);
 
-    const filteredMap = filteredListByName.map(({ name }) => name);
-    console.log('filteredMap', filteredMap);
+    const filteredByNameMap = filteredListByName.map(({ name }) => name);
+    // console.log('filteredByNameMap', filteredByNameMap);
 
-    // setFilteredPlanetsList(filtered);
+    const byName = currentFilteredbyFilter.filter(({ name }) => {
+      // console.log(name);
+      return filteredByNameMap.includes(name);
+    });
+
+    //ORIGINAL:
+    // console.log(result);
+    // setFilteredPlanetsList(result);
+    //Mode: a intenção é que só seja atualizado pelo filterByListFilters
+    filterByListFilters(byName);
   }
 
   function filterPlanetsByName(searched) {
     setPlanetSearched(searched);
-    const filtered = filteredPlanetsList
+    const filtered = currentFilteredbyFilter
       .filter((planet) => planet.name.includes(searched));
     setFilteredListByName(filtered);
   }
