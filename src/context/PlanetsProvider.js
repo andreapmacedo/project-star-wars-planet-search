@@ -8,11 +8,11 @@ function PlanetsProvider({ children }) {
   const [filteredPlanetsList, setFilteredPlanetsList] = useState(planetsList);
   // const [filteredPlanetsList, setFilteredPlanetsList] = useState([]);
   const [planetSearched, setPlanetSearched] = useState('');
-  const [planetsSearchedLength, setPlanetSearchedLength] = useState(0);
+  // const [planetsSearchedLength, setPlanetSearchedLength] = useState(0);
   const [stateList, setStateList] = useState([]);
   const [filterList, setFilterList] = useState([]);
   const [filteredListByName, setFilteredListByName] = useState(planetsList);
-  const [filteredListByFilter, setFilteredListByFilter] = useState(planetsList);
+  // const [filteredListByFilter, setFilteredListByFilter] = useState(planetsList);
   let currentFilteredbyFilter = planetsList;
 
   useEffect(() => {
@@ -74,7 +74,7 @@ function PlanetsProvider({ children }) {
   function filterByListFilters() {
     // console.log('list', list);
     console.log('currentFilteredbyFilter', currentFilteredbyFilter);
-    let temp = currentFilteredbyFilter;
+    const temp = currentFilteredbyFilter;
     filterList.forEach((filterIten) => {
       console.log('filterIten', filterIten);
       currentFilteredbyFilter = findByColum(filterIten, currentFilteredbyFilter);

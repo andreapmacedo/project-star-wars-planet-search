@@ -7,7 +7,6 @@ function Menu() {
     'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
 
   const { filterPlanetsByName,
-    planetsSearched,
     clearFilter,
     stateList,
     deleteFilter,
