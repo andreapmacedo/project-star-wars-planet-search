@@ -11,7 +11,6 @@ function Menu() {
     stateList,
     deleteFilter,
     deleteAllFilters,
-    // filterList,
     createFilter,
   } = useContext(PlanetsContext);
 
@@ -61,7 +60,7 @@ function Menu() {
 
     const filterList = defaultColumnList
       .filter((columnItem) => !filteredMap.includes(columnItem));
-    // console.log(filterList);
+
     setState((prevState) => ({ ...prevState,
       columnFilterList: filterList,
       column: filterList[0],
@@ -119,17 +118,6 @@ function Menu() {
           id="serch"
         />
       </label>
-      {/* <label htmlFor="serch">
-        Pesquisar Planeta:
-        <input
-          data-testid="name-filter"
-          value={ planetsSearched }
-          onChange={ handleChange }
-          name="serchByName"
-          placeholder="Pesquisar Planeta"
-          id="serch"
-        />
-      </label> */}
       <button
         onClick={ callClear }
         type="button"

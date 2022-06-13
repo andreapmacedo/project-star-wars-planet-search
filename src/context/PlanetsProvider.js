@@ -6,13 +6,10 @@ function PlanetsProvider({ children }) {
   const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
   const [planetsList, setPlanetsList] = useState([]);
   const [filteredPlanetsList, setFilteredPlanetsList] = useState(planetsList);
-  // const [filteredPlanetsList, setFilteredPlanetsList] = useState([]);
   const [planetSearched, setPlanetSearched] = useState('');
-  // const [planetsSearchedLength, setPlanetSearchedLength] = useState(0);
   const [stateList, setStateList] = useState([]);
   const [filterList, setFilterList] = useState([]);
   const [filteredListByName, setFilteredListByName] = useState(planetsList);
-  // const [filteredListByFilter, setFilteredListByFilter] = useState(planetsList);
   let currentFilteredbyFilter = planetsList;
 
   useEffect(() => {
@@ -65,14 +62,7 @@ function PlanetsProvider({ children }) {
     }
   }
 
-  // function filterByListFilters() {
-  //   const filtered = filteredListByName
-  //     .filter((planet) => planet.name.includes(planetSearched));
-  //   setFilteredListByFilter(filtered);
-  // }
-
   function filterByListFilters() {
-    // console.log('list', list);
     console.log('currentFilteredbyFilter', currentFilteredbyFilter);
     const temp = currentFilteredbyFilter;
     filterList.forEach((filterIten) => {
@@ -98,30 +88,9 @@ function PlanetsProvider({ children }) {
 
     console.log('result', result);
     console.log('---------------');
-    // console.log(filteredListByFilter);
-    // const test = result.filter((item) => item);
-    // console.log('test', test);
 
-    // setFilteredListByFilter(temp);
     setFilteredPlanetsList(result);
   }
-
-  // function filterByListFilters() {
-  //   filterList.forEach((filterIten) => {
-  //     currentFilteredbyFilter = findByColum(filterIten, filteredListByFilter);
-  //   });
-  //   console.log('filterByListFilters', currentFilteredbyFilter);
-  //   setFilteredListByFilter(currentFilteredbyFilter);
-  //   setFilteredPlanetsList(currentFilteredbyFilter);
-  // }
-
-  // function filterByListFilters() {
-  //   filterList.forEach((filterIten) => {
-  //     currentFilteredbyFilter = findByColum(filterIten, currentFilteredbyFilter);
-  //   });
-  //   // console.log('filterByListFilters', currentFilteredbyFilter);
-  //   setFilteredPlanetsList(currentFilteredbyFilter);
-  // }
 
   function createFilter(newFilter) {
     setFilterList([...filterList, newFilter]);
@@ -133,8 +102,6 @@ function PlanetsProvider({ children }) {
   }, [filterList]);
 
   function clearFilter() {
-    // currentFilteredbyFilter = planetsList;
-    // filterByListFilters();
     setPlanetSearched('');
   }
 
@@ -146,30 +113,11 @@ function PlanetsProvider({ children }) {
 
   function deleteAllFilters() {
     currentFilteredbyFilter = planetsList;
-    // filterByListFilters();
     setStateList([]);
     setFilterList([]);
   }
 
-  // let currentFilteredbyName = planetsList;
-  // UM FILTRO TRABALHANDO COM O FILTRO DO OUTRO
-
   function updateFilterByName() {
-    // console.log('filteredPlanetsList', filteredPlanetsList);
-
-    // const filteredByNameMap = filteredListByName.map(({ name }) => name);
-    // // console.log('filteredByNameMap', filteredByNameMap);
-
-    // const byName = currentFilteredbyFilter.filter(({ name }) => {
-    //   // console.log(name);
-    //   return filteredByNameMap.includes(name);
-    // });
-
-    // ORIGINAL:
-    // console.log(result);
-    // setFilteredPlanetsList(result);
-    // Mode: a intenção é que só seja atualizado pelo filterByListFilters
-    // filterByListFilters(byName);
     filterByListFilters();
   }
 
