@@ -28,16 +28,18 @@ function PlanetsProvider({ children }) {
   }, []);
 
   function findByComparison(column, planetState) {
-    if (column === 'unknown') return '';
-    if (planetState.comparison === 'maior que') {
-      return filteredPlanetsList
-        .find(() => Number(column) > Number(planetState.value));
-    } if (planetState.comparison === 'menor que') {
-      return filteredPlanetsList
-        .find(() => Number(column) < Number(planetState.value));
-    } if (planetState.comparison === 'igual a') {
-      return filteredPlanetsList
-        .find(() => Number(column) === Number(planetState.value));
+    // if (column === 'unknown') return '';
+    if (column !== 'unknown') {
+      if (planetState.comparison === 'maior que') {
+        return filteredPlanetsList
+          .find(() => Number(column) > Number(planetState.value));
+      } if (planetState.comparison === 'menor que') {
+        return filteredPlanetsList
+          .find(() => Number(column) < Number(planetState.value));
+      } if (planetState.comparison === 'igual a') {
+        return filteredPlanetsList
+          .find(() => Number(column) === Number(planetState.value));
+      }
     }
   }
 
@@ -63,29 +65,18 @@ function PlanetsProvider({ children }) {
     }
   }
 
-  function deleteFilter(itemIndex) {
-    const filter = stateList.filter((item, index) => index !== itemIndex);
-    setStateList(filter);
-    setFilterList(filter);
-    // filterPlanetsByName(planetsSearched);
-  }
-
-  function deleteAllFilters() {
-    setStateList([]);
-    setFilterList([]);
-    // filterPlanetsByName(planetsSearched);
-  }
-
   // function filterByListFilters() {
   //   const filtered = filteredListByName
   //     .filter((planet) => planet.name.includes(planetSearched));
   //   setFilteredListByFilter(filtered);
   // }
 
-  function filterByListFilters(list) {
-    console.log('list', list);
+  function filterByListFilters() {
+    // console.log('list', list);
     console.log('currentFilteredbyFilter', currentFilteredbyFilter);
+    let temp = currentFilteredbyFilter;
     filterList.forEach((filterIten) => {
+      console.log('filterIten', filterIten);
       currentFilteredbyFilter = findByColum(filterIten, currentFilteredbyFilter);
     });
     console.log('filterByListFilters', currentFilteredbyFilter);
@@ -93,7 +84,12 @@ function PlanetsProvider({ children }) {
     const filteredByNameMap = filteredListByName.map(({ name }) => name);
     console.log('filteredByNameMap', filteredByNameMap);
 
-    let result = currentFilteredbyFilter;
+    let result = temp;
+    if (currentFilteredbyFilter.length > 0) {
+      result = currentFilteredbyFilter;
+    } else {
+      currentFilteredbyFilter = temp;
+    }
 
     if (filteredByNameMap.length > 0) {
       result = currentFilteredbyFilter
@@ -119,7 +115,6 @@ function PlanetsProvider({ children }) {
   //   setFilteredPlanetsList(currentFilteredbyFilter);
   // }
 
-
   // function filterByListFilters() {
   //   filterList.forEach((filterIten) => {
   //     currentFilteredbyFilter = findByColum(filterIten, currentFilteredbyFilter);
@@ -134,13 +129,26 @@ function PlanetsProvider({ children }) {
   }
 
   useEffect(() => {
-    filterByListFilters(filteredPlanetsList);
+    filterByListFilters();
   }, [filterList]);
 
   function clearFilter() {
-    currentFilteredbyFilter = planetsList;
-    filterByListFilters(currentFilteredbyFilter);
+    // currentFilteredbyFilter = planetsList;
+    // filterByListFilters();
     setPlanetSearched('');
+  }
+
+  function deleteFilter(itemIndex) {
+    const filter = stateList.filter((item, index) => index !== itemIndex);
+    setStateList(filter);
+    setFilterList(filter);
+  }
+
+  function deleteAllFilters() {
+    currentFilteredbyFilter = planetsList;
+    // filterByListFilters();
+    setStateList([]);
+    setFilterList([]);
   }
 
   // let currentFilteredbyName = planetsList;
@@ -149,19 +157,20 @@ function PlanetsProvider({ children }) {
   function updateFilterByName() {
     // console.log('filteredPlanetsList', filteredPlanetsList);
 
-    const filteredByNameMap = filteredListByName.map(({ name }) => name);
-    // console.log('filteredByNameMap', filteredByNameMap);
+    // const filteredByNameMap = filteredListByName.map(({ name }) => name);
+    // // console.log('filteredByNameMap', filteredByNameMap);
 
-    const byName = currentFilteredbyFilter.filter(({ name }) => {
-      // console.log(name);
-      return filteredByNameMap.includes(name);
-    });
+    // const byName = currentFilteredbyFilter.filter(({ name }) => {
+    //   // console.log(name);
+    //   return filteredByNameMap.includes(name);
+    // });
 
-    //ORIGINAL:
+    // ORIGINAL:
     // console.log(result);
     // setFilteredPlanetsList(result);
-    //Mode: a intenção é que só seja atualizado pelo filterByListFilters
-    filterByListFilters(byName);
+    // Mode: a intenção é que só seja atualizado pelo filterByListFilters
+    // filterByListFilters(byName);
+    filterByListFilters();
   }
 
   function filterPlanetsByName(searched) {
