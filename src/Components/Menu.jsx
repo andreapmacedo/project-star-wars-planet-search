@@ -6,7 +6,8 @@ function Menu() {
   const defaultColumnList = ['population',
     'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
 
-  const { filterPlanetsByName,
+  const {
+    filterPlanetsByName,
     clearFilter,
     stateList,
     deleteFilter,
