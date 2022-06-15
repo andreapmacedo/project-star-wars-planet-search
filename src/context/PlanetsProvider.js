@@ -14,7 +14,6 @@ function PlanetsProvider({ children }) {
   const [inputNameText, setInputNameText] = useState('');
   const [stateList, setStateList] = useState([]);
   const [numericFilterList, setNumericFilterList] = useState([]);
-  let currentFilteredbyFilter = planetsData;
 
   useEffect(() => {
     const getPlanets = async () => {
