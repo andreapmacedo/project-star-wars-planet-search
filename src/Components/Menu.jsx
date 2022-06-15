@@ -34,11 +34,11 @@ function Menu() {
     };
     createFilter(newFilter);
 
-    const filterList = state.columnFilterList
+    const numericFilterList = state.columnFilterList
       .filter((columnItem) => columnItem !== state.column);
     setState((prevState) => ({ ...prevState,
-      columnFilterList: filterList,
-      column: filterList[0],
+      columnFilterList: numericFilterList,
+      column: numericFilterList[0],
       columnFilteredList: prevState.columnFilteredList.concat(state.column),
     }));
   }
@@ -59,12 +59,12 @@ function Menu() {
     const filteredMap = filteredList
       .map(({ column }) => column);
 
-    const filterList = defaultColumnList
+    const numericFilterList = defaultColumnList
       .filter((columnItem) => !filteredMap.includes(columnItem));
 
     setState((prevState) => ({ ...prevState,
-      columnFilterList: filterList,
-      column: filterList[0],
+      columnFilterList: numericFilterList,
+      column: numericFilterList[0],
       columnFilteredList: filteredList,
     }));
     deleteFilter(index);
@@ -172,7 +172,7 @@ function Menu() {
       {/* </div> */}
       <div className="state-list-container">
         {stateList.map((stateItem, index) => (
-        // {filterList.map((stateItem, index) => (
+        // {numericFilterList.map((stateItem, index) => (
           <section
             data-testid="filter"
             key={ index }
