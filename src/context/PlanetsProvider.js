@@ -22,7 +22,7 @@ function PlanetsProvider({ children }) {
       const { results } = await data.json();
       setPlanetsData(results);
       setFilteredPlanetsData(results);
-      setFilteredPlanetByNumeric(results);
+      // setFilteredPlanetByNumeric(results);
       // const planets = await data.json();
       // setPlanetsData(planets.result);
     };
@@ -68,58 +68,19 @@ function PlanetsProvider({ children }) {
   }
 
   function filterByListFilters() {
-    console.log('currentFilteredbyFilter', currentFilteredbyFilter);
-    console.log('filteredPlanetsData', filteredPlanetsData);
-    console.log('inputNameText', inputNameText);
-
     let temp = [];
-    console.log('temp a', temp);
-
     temp = planetsData.filter((planet) => planet.name.includes(inputNameText));
-
-    console.log('temp b', temp);
     let result = temp;
     numericFilterList.forEach((filterIten) => {
-      // console.log('filterIten', filterIten);
-      result = findByColum(filterIten, temp);
+      console.log('filterIten', filterIten);
+      result = findByColum(filterIten, result);
+      console.log('result in', result);
     });
 
-    setFilteredPlanetByNumeric(temp);
-
-    console.log('result', result);
-    // console.log('---------------');
+    console.log('result out', result);
+    console.log('---------------');
     setFilteredPlanetsData(result);
   }
-
-  // function filterByListFilters() {
-  //   console.log('currentFilteredbyFilter', currentFilteredbyFilter);
-  //   const temp = currentFilteredbyFilter;
-  //   numericFilterList.forEach((filterIten) => {
-  //     console.log('filterIten', filterIten);
-  //     currentFilteredbyFilter = findByColum(filterIten, currentFilteredbyFilter);
-  //   });
-  //   console.log('filterByListFilters', currentFilteredbyFilter);
-
-  //   const filteredPlanetByNameMap = filteredPlanetByName.map(({ name }) => name);
-  //   console.log('filteredPlanetByNameMap', filteredPlanetByNameMap);
-
-  //   let result = temp;
-  //   if (currentFilteredbyFilter.length > 0) {
-  //     result = currentFilteredbyFilter;
-  //   } else {
-  //     currentFilteredbyFilter = temp;
-  //   }
-
-  //   if (filteredPlanetByNameMap.length > 0) {
-  //     result = currentFilteredbyFilter
-  //       .filter(({ name }) => filteredPlanetByNameMap.includes(name));
-  //   }
-
-  //   console.log('result', result);
-  //   console.log('---------------');
-
-  //   setFilteredPlanetsData(result);
-  // }
 
   function createFilter(newFilter) {
     setNumericFilterList([...numericFilterList, newFilter]);
@@ -145,7 +106,7 @@ function PlanetsProvider({ children }) {
   }
 
   function deleteAllFilters() {
-    currentFilteredbyFilter = planetsData;
+    setFilteredPlanetsData(planetsData);
     setStateList([]);
     setNumericFilterList([]);
   }
